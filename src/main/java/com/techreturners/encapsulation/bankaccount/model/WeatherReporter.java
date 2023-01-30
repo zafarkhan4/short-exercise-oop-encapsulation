@@ -4,48 +4,64 @@ import java.text.MessageFormat;
 
 public class WeatherReporter {
 
-    public String location;
-    public double temperature;
+    private String city;
+    private double temperatureInCelcius;
+    private final int HOT_TEMPERATURE_THRESHOLD = 30;
+    private final int COLD_TEMPERATUE_THRESHHOLD = 10;
 
-    public WeatherReporter(String location, double temperature) {
-        this.location = location;
-        this.temperature = temperature;
+    public WeatherReporter(String city, double temperatureInCelcius) {
+        this.city = city;
+        this.temperatureInCelcius = temperatureInCelcius;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public double getTemperatureInCelcius() {
+        return temperatureInCelcius;
+    }
+
+    private double calculateFahrenheitTemperature(double temperatureInCelcius) {
+        return (9.0 / 5.0) * temperatureInCelcius + 32;
     }
 
     public String print() {
-
-        double newTemp = (9.0 / 5.0) * temperature + 32;
-        return MessageFormat.format("I am in {0} and it is {1}. {2}. The temperature in Fahrenheit is {3}.", location, check1(), check2(), newTemp);
+        double newTemp = calculateFahrenheitTemperature(temperatureInCelcius);
+        return MessageFormat.format("I am in {0} and it is {1}. {2}. The temperature in Fahrenheit is {3}.", location,
+                getLocationWeather(), getTemperaureInfo(), newTemp);
 
     }
 
-    public String check1() {
-        if (location == "London") {
+    public String getLocationWeather() {
 
-            return "🌦";
+        String locationWeather;
 
-        } else if (location == "California") {
-
-            return "🌅";
-
-        } else if (location == "Cape Town") {
-
-            return "🌤";
-
+        switch (city.toLowerCase()) {
+            case "london":
+                locationWeather = "🌦";
+                break;
+            case "california":
+                locationWeather = "🌅";
+                break;
+            case "cape town":
+                locationWeather = "🌤";
+                break;
+            default:
+                locationWeather = "🔆";
         }
-        return "🔆";
+
+        return locationWeather;
     }
 
-    public String check2() {
-        if (temperature > 30) {
+    public String getTemperaureInfo() {
 
+        if (temperatureInCelcius > HOT_TEMPERATURE_THRESHOLD)
             return "It's too hot 🥵!";
 
-        } else if (temperature < 10) {
-
+        if (temperatureInCelcius < COLD_TEMPERATUE_THRESHHOLD)
             return "It's too cold 🥶!";
 
-        }
         return "Ahhh...it's just right 😊!";
     }
 
